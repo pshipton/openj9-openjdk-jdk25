@@ -1,7 +1,10 @@
 /*
  * ===========================================================================
- * (c) Copyright IBM Corp. 2019, 2024 All Rights Reserved
+ * (c) Copyright IBM Corp. 2019, 2025 All Rights Reserved
  * ===========================================================================
+ *
+ * Copyright (c) 2016, 2025, Oracle and/or its affiliates. All rights reserved.
+ * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
  * under the terms of the GNU General Public License version 2 only, as
@@ -29,15 +32,18 @@ import java.util.Properties;
 import java.util.concurrent.Callable;
 import java.util.concurrent.TimeUnit;
 
+import jdk.internal.misc.PreviewFeatures;
 import jdk.test.lib.Platform;
 
 public class OpenJ9PropsExt implements Callable<Map<String, String>> {
 
     @Override
     public Map<String, String> call() {
-        Map<String, String> map = new HashMap<>();
+    	Map<String, String> map = new HashMap<>();
         try {
             map.put("container.support", "true");
+            map.put("java.enablePreview", (this::isPreviewEnabled).get());
+            map.put("jdk.static", "false");
             map.put("jlink.packagedModules", Boolean.toString(packagedModules()));
             map.put("systemd.support", Boolean.toString(systemdSupport()));
             map.put("vm.bits", vmBits());
@@ -66,6 +72,10 @@ public class OpenJ9PropsExt implements Callable<Map<String, String>> {
             System.exit(1);
         }
         return map;
+    }
+
+    protected String isPreviewEnabled() {
+        return "" + PreviewFeatures.isEnabled();
     }
 
     /**
