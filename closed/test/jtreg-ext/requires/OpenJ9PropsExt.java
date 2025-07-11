@@ -31,11 +31,14 @@ import java.util.Map;
 import java.util.Properties;
 import java.util.concurrent.Callable;
 import java.util.concurrent.TimeUnit;
+import java.util.function.Supplier;
 
 import jdk.internal.misc.PreviewFeatures;
 import jdk.test.lib.Platform;
 
 public class OpenJ9PropsExt implements Callable<Map<String, String>> {
+    // value known to jtreg as an indicator of error state
+    private static final String ERROR_STATE = "__ERROR__";
 
     private static class SafeMap {
         private final Map<String, String> map = new HashMap<>();
