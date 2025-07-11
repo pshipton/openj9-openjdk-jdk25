@@ -37,12 +37,32 @@ import jdk.test.lib.Platform;
 
 public class OpenJ9PropsExt implements Callable<Map<String, String>> {
 
+    private static class SafeMap {
+        private final Map<String, String> map = new HashMap<>();
+
+        public void put(String key, String value) {
+        	map.put(key, value);
+        }
+
+        public void putHelper(String key, Supplier<String> s) {
+            String value;
+            try {
+                value = s.get();
+            } catch (Throwable t) {
+                System.err.println("failed to get value for " + key);
+                t.printStackTrace(System.err);
+                value = ERROR_STATE + t;
+            }
+            map.put(key, value);
+        }
+    }
+
     @Override
     public Map<String, String> call() {
-    	Map<String, String> map = new HashMap<>();
+    	SafeMap map = new SafeMap();
         try {
             map.put("container.support", "true");
-            map.put("java.enablePreview", (this::isPreviewEnabled).get());
+            map.putHelper("java.enablePreview", this::isPreviewEnabled);
             map.put("jdk.static", "false");
             map.put("jlink.packagedModules", Boolean.toString(packagedModules()));
             map.put("systemd.support", Boolean.toString(systemdSupport()));
@@ -71,7 +91,7 @@ public class OpenJ9PropsExt implements Callable<Map<String, String>> {
             e.printStackTrace();
             System.exit(1);
         }
-        return map;
+        return map.map;
     }
 
     protected String isPreviewEnabled() {
