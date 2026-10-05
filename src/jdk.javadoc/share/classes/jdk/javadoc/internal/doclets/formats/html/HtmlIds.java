@@ -22,6 +22,11 @@
  * or visit www.oracle.com if you need additional information or have any
  * questions.
  */
+/*
+ * ===========================================================================
+ * (c) Copyright IBM Corp. 2026, 2026 All Rights Reserved
+ * ===========================================================================
+ */
 
 package jdk.javadoc.internal.doclets.formats.html;
 
@@ -113,7 +118,7 @@ public class HtmlIds {
     static final HtmlId RESET_SEARCH = HtmlId.of("reset-search");
     static final HtmlId SEARCH_INPUT = HtmlId.of("search-input");
     static final HtmlId SERVICES = HtmlId.of("services-summary");
-    static final HtmlId SKIP_NAVBAR_TOP = HtmlId.of("skip-navbar-top");
+    public static final HtmlId SKIP_NAVBAR_TOP = HtmlId.of("skip-navbar-top");
     static final HtmlId UNNAMED_PACKAGE_ANCHOR = HtmlId.of("unnamed-package");
     private static final String FIELDS_INHERITANCE = "fields-inherited-from-class-";
     private static final String METHODS_INHERITANCE = "methods-inherited-from-class-";
